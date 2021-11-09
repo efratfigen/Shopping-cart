@@ -52,4 +52,9 @@ export const Wrapper = styled.div`
     line-height: 20px;
     margin: 0 20px;
   }
+  
+  .like-btn{
+     border-radius: 0;
+     background-color: transparent;
+  }
 `;

@@ -24,6 +24,7 @@ export type CartItemType = {
     price: number;
     title: string;
     amount: number;
+    like?:boolean;
 };
 
 
@@ -42,6 +43,8 @@ const App = () => {
         localStorage.setItem('cart', JSON.stringify(cartItems))
     }, [cartItems] );
 
+    const [searchVal, setSearchVal] = useState('');
+    const [filteredProducts, setFilteredProducts] = useState<CartItemType[]>(productsData);
 
     const getTotalItems = (items: CartItemType[]) =>
         items.reduce((ack: number, item) => ack + item.amount, 0);
@@ -77,6 +80,20 @@ const App = () => {
         );
     };
 
+
+    const searchProductsData = (searchText: string) => {
+        setSearchVal(searchText);
+        const text = searchText.toLocaleLowerCase();
+        if(searchText){
+            const productDataFilter = productsData.filter(function (product) {
+                return (product.title.toLocaleLowerCase().indexOf(text) >= 0 || product.description.toLocaleLowerCase().indexOf(text) >= 0);
+            });
+            setFilteredProducts(productDataFilter);
+        } else {
+            setFilteredProducts(productsData);
+        }
+    };
+
   return (
     <Wrapper>
         <Drawer anchor='right' open={cartOpen} onClose={() => setCartOpen(false)}>
@@ -91,8 +108,9 @@ const App = () => {
                 <AddShoppingCartIcon fontSize="large" />
             </Badge>
         </Button>
+        <input type="text" placeholder="Search..." onChange={(e) => searchProductsData(e.target.value)}/>
         <Grid container spacing={3}>
-            {productsData.map((item => (
+            {filteredProducts.map((item => (
                 <Grid item key={item.id} xs={12} sm={4}>
                     <Item item={item} handleAddToCart={handleAddToCart} />
                 </Grid>

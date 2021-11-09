@@ -1,9 +1,12 @@
 import {useState} from 'react'
 import Button from '@material-ui/core/Button';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons//Favorite';
 // Types
 import { CartItemType } from '../App';
 // Styles
 import { Wrapper } from './Item.styles';
+import DeleteIcon from "../CartItem/CartItem";
 
 type Properties = {
   item: CartItemType;
@@ -15,6 +18,7 @@ type Properties = {
 const Item: React.FC<Properties> = ({ item, handleAddToCart }) => {
     const [count, setCount] = useState(1);
     const [isAdded, setIsAdded] = useState(false);
+    const [like, setLike] = useState(false);
 
     return(
     <Wrapper>
@@ -25,6 +29,14 @@ const Item: React.FC<Properties> = ({ item, handleAddToCart }) => {
             <h3>{item.title}</h3>
             <p>{item.description}</p>
             <h3>${item.price}</h3>
+            {!like ?
+                <Button type="button" className='like-btn' onClick={() => {setLike(true); item.like = true;}}>
+                    <FavoriteBorderIcon/>
+                </Button> :
+                <Button type="button" className='like-btn' onClick={() => {setLike(false); item.like = false;}}>
+                    <FavoriteIcon />
+                </Button>
+            }
         </div>
         <div className='qty'>
             <Button className='qty-btn'
