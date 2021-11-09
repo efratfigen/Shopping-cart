@@ -49,7 +49,7 @@ const App = () => {
     const getTotalItems = (items: CartItemType[]) =>
         items.reduce((ack: number, item) => ack + item.amount, 0);
 
-    const handleAddToCart = (clickedItem: CartItemType, count: number = 1) => {
+    const handleAddToCart = (clickedItem: CartItemType, count: number = 1, likeStatus:boolean = false) => {
         setCartItems(prev => {
             // Check if the item already added in the cart
             const isItemInCart = prev.find(item => item.id === clickedItem.id);
@@ -62,7 +62,7 @@ const App = () => {
                 );
             }
             // First time the item is added
-            return [...prev, { ...clickedItem, amount: count }];
+            return [...prev, { ...clickedItem, amount: count, like: likeStatus }];
         });
     };
 
@@ -80,6 +80,19 @@ const App = () => {
         );
     };
 
+
+
+    const updateFavorites = (id: number, status = false) => {
+        setCartItems(prev =>
+            prev.reduce((ack, item) => {
+                if (item.id === id) {
+                    return [...ack, { ...item, like: item.like = status }];
+                } else {
+                    return [...ack, item];
+                }
+            }, [] as CartItemType[])
+        );
+    };
 
     const searchProductsData = (searchText: string) => {
         setSearchVal(searchText);
@@ -112,7 +125,7 @@ const App = () => {
         <Grid container spacing={3}>
             {filteredProducts.map((item => (
                 <Grid item key={item.id} xs={12} sm={4}>
-                    <Item item={item} handleAddToCart={handleAddToCart} />
+                    <Item item={item} handleAddToCart={handleAddToCart} updateFavorites={updateFavorites} />
                 </Grid>
             )))}
         </Grid>

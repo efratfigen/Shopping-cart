@@ -10,12 +10,14 @@ import DeleteIcon from "../CartItem/CartItem";
 
 type Properties = {
   item: CartItemType;
-  handleAddToCart: (clickedItem: CartItemType, count: number) => void;
+  handleAddToCart: (clickedItem: CartItemType, count: number, likeStatus:boolean) => void;
+  updateFavorites: (id:number, status: boolean) => void;
 };
 
 
 
-const Item: React.FC<Properties> = ({ item, handleAddToCart }) => {
+const Item: React.FC<Properties> = ({ item, handleAddToCart, updateFavorites }) => {
+
     const [count, setCount] = useState(1);
     const [isAdded, setIsAdded] = useState(false);
     const [like, setLike] = useState(false);
@@ -30,10 +32,10 @@ const Item: React.FC<Properties> = ({ item, handleAddToCart }) => {
             <p>{item.description}</p>
             <h3>${item.price}</h3>
             {!like ?
-                <Button type="button" className='like-btn' onClick={() => {setLike(true); item.like = true;}}>
+                <Button type="button" className='like-btn' onClick={() => {setLike(true); updateFavorites(item.id, true);}}>
                     <FavoriteBorderIcon/>
                 </Button> :
-                <Button type="button" className='like-btn' onClick={() => {setLike(false); item.like = false;}}>
+                <Button type="button" className='like-btn' onClick={() => {setLike(false); updateFavorites(item.id, false);}}>
                     <FavoriteIcon />
                 </Button>
             }
@@ -61,7 +63,7 @@ const Item: React.FC<Properties> = ({ item, handleAddToCart }) => {
             className={!isAdded ? "" : "added"}
             type="button"
             onClick={() => {
-                    handleAddToCart(item, count);
+                    handleAddToCart(item, count, like);
                     setIsAdded(true);
                     setTimeout(() => {
                         setIsAdded(false);
